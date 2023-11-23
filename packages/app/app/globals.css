@@ -28,16 +28,6 @@
     box-sizing: border-box;
 }
 
-html, body, #root {
-    width: 100vw;
-    height: 100vh;
+html, body {
     background: transparent;
-}
-
-.caster-modifiers *:first-child {
-    border-radius: 0 0 0 24px;    
-}
-
-.caster-modifiers *:last-child {
-    border-radius: 0 0 24px 0;    
 }
