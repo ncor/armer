@@ -2,7 +2,7 @@
 
 import { GlobalKeyboardListener, IGlobalKeyEvent } from "node-global-key-listener";
 import { Keystroke, KeystrokeHandler, ToggleMap } from "./types";
-import { MODIFIERS } from "./constants";
+import { CAPS_LOCK, DELETE_KEYS, MODIFIERS } from "./constants";
 
 
 class KeystrokeDetector {
@@ -28,8 +28,10 @@ class KeystrokeDetector {
     public listener(_: IGlobalKeyEvent, toggleMap: ToggleMap) {
         const filteredTogglePairs =Object.entries(toggleMap)
             .filter(([k, v]) =>
-                this.previousToggleMap[k] != v &&
-                (v || MODIFIERS.includes(k))
+                (this.previousToggleMap[k] != v &&
+                    (v || MODIFIERS.includes(k))) ||
+                (DELETE_KEYS.includes(k) && v) ||
+                (k == CAPS_LOCK && v)
             );
         const keystroke: Keystroke = {
             key: filteredTogglePairs?.[0]?.[0],
