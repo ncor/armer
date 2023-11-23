@@ -1,3 +1,6 @@
+import { Keymap } from "./types";
+
+
 export const MODIFIERS = [
     'LEFT SHIFT',
     'RIGHT SHIFT',
@@ -9,12 +12,22 @@ export const MODIFIERS = [
     'RIGHT META'
 ];
 
+export const CAPS_LOCK = 'CAPS LOCK';
+
 export const F_KEYS = [
     'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
     'F7', 'F28', 'F9', 'F10', 'F11', 'F12'
 ];
 
-export const KEYMAP: { [key: string]: string } = {
+export const DELETE_KEYS = [
+    'BACKSPACE', 'DELETE'
+];
+
+export const UNPRINTABLE_KEYS = [
+    'PRINT SCREEN', 'SCROLL LOCK'
+];
+
+export const KEYMAP: Keymap = {
     'ESCAPE': '⎋',
     'TAB': '⇥',
     'CAPS LOCK': '⇪',
@@ -39,7 +52,32 @@ export const KEYMAP: { [key: string]: string } = {
     'QUOTE': '\'',
     'COMMA': ',',
     'DOT': '.',
-    'FORWARD SLASH': '/',
-    'PRINT SCREEN': '',
-    'SCROLL LOCK': ''
+    'FORWARD SLASH': '/'
 };
+
+export const SHIFT_EXTENSIONS: Keymap = {
+    'SECTION': '`',
+    '1': '!',
+    '2': '@',
+    '3': '#',
+    '4': '$',
+    '5': '%',
+    '6': '^',
+    '7': '&',
+    '8': '*',
+    '9': '(',
+    '0': ')',
+    'MINUS': '_',
+    'EQUALS': '+',
+    'SQUARE BRACKET OPEN': '{',
+    'SQUARE BRACKET CLOSE': '}',
+    'SEMICOLON': ':',
+    'QUOTE': '"',
+    'COMMA': '<',
+    'DOT': '>',
+    'FORWARD SLASH': '?'
+};
+
+export const RESET_KEYS = [
+    'RETURN'
+];
