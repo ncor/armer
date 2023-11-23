@@ -6,7 +6,6 @@ import {
     F_KEYS,
     KEYMAP,
     MODIFIERS,
-    RESET_KEYS,
     SHIFT_EXTENSIONS,
     UNPRINTABLE_KEYS,
 } from "@/lib/keyboard/constants";
@@ -21,11 +20,12 @@ export default function CasterInputBox() {
     const { isFaded, toggleFade } = useFade();
     const keystroke = useKeystroke();
     const { modifiers, applyModifiers, applyCase } = useModifiers();
-    const [input, setInput] = useState<string>('');
-    const [deletedInput, setDeletedInput] = useState<string>('');
+    const [ input, setInput ] = useState<string>('');
+    const [ isPrevHotkey, togglePrevHotkey ] = useState<boolean>(false);
+    const [ deletedInput, setDeletedInput ] = useState<string>('');
 
-    const reset = () => {
-        setInput('');
+    const reset = (starterInput?: string) => {
+        setInput(starterInput || '');
         setDeletedInput('');
     };
 
@@ -42,30 +42,32 @@ export default function CasterInputBox() {
             !UNPRINTABLE_KEYS.includes(key)
         ) {
             const isDeleteKey = DELETE_KEYS.includes(key);
-            const isResetKey = RESET_KEYS.includes(key);
 
             if (!F_KEYS.includes(key) && !isDeleteKey) {
-                if (SHIFT_EXTENSIONS[key] && modifiers.isOnlyShiftPressed) {
-                    key = SHIFT_EXTENSIONS[key];
-                } else {
-                    key = KEYMAP[key] || applyCase(key);
-                    key = applyModifiers(key);
+                key = KEYMAP[key] || key;
+                
+                if (modifiers.isAnyModifierPressed) {
+                    togglePrevHotkey(true);
+                    return reset(applyModifiers(key));
                 }
+
+                key = applyCase(key);
+            }
+
+            if (isPrevHotkey) {
+                togglePrevHotkey(false);
+                if (isDeleteKey) toggleFade(true);
+                return reset(isDeleteKey ? '' : key);
             }
 
             setInput(prevInput => {
-                if (isResetKey) {
-                    setDeletedInput('');
-                    return key;
-                }
-
                 if (isDeleteKey) {
                     setDeletedInput(prev => {
                         if (prevInput.length > 0) {
                             return prevInput[prevInput.length - 1] + prev;
                         } else {
                             toggleFade(true);
-                            return "";
+                            return '';
                         }
                     });
                     
@@ -79,13 +81,13 @@ export default function CasterInputBox() {
         }
     }, [ keystroke, isFaded ]);
 
-    const fadeStyles = isFaded ? 'opacity-0' : '';
-
     /**
      * Based on "i" symbol width.
      */
     if (input.length > 24)
         setInput(input.slice(input.length - 24));
+
+    const fadeStyles = isFaded ? 'opacity-0' : '';
 
     return (
         <div className={
