@@ -8,3 +8,5 @@ export type Keystroke = {
 };
 
 export type KeystrokeHandler = (keystroke: Keystroke) => any;
+
+export type Keymap = { [key: string]: string };
