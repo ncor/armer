@@ -6,14 +6,8 @@ import useFade from "../hooks/fade";
 
 
 export default function Caster() {
-    const isFaded = useFade();
-
-    const fadeStyles = isFaded ? 'opacity-50' : '';
-
     return <div
-        className={
-            `w-[250px] text-white transition-all duration-200 ${fadeStyles}`
-        }
+        className="grid gap-[2px] w-[250px] text-white transition-all duration-200"
     >
         <CasterInputBox/>
         <CasterModifiers/>
