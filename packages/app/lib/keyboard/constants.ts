@@ -38,8 +38,8 @@ export const KEYMAP: Keymap = {
     'HOME': '⇱',
     'END': '⇲',
     'INS': '⎀',
-    'PAGE UP': '⇞',
-    'PAGE DOWN': '⇟',
+    'PAGE UP': '⇡',
+    'PAGE DOWN': '⇣',
     'UP ARROW': '↑',
     'DOWN ARROW': '↓',
     'LEFT ARROW': '←',
@@ -47,6 +47,8 @@ export const KEYMAP: Keymap = {
     'SECTION': '~',
     'MINUS': '-',
     'EQUALS': '=',
+    'SQUARE BRACKET OPEN': '[',
+    'SQUARE BRACKET CLOSE': ']',
     'BACKSLASH': '\\',
     'SEMICOLON': ';',
     'QUOTE': '\'',
@@ -77,7 +79,3 @@ export const SHIFT_EXTENSIONS: Keymap = {
     'DOT': '>',
     'FORWARD SLASH': '?'
 };
-
-export const RESET_KEYS = [
-    'RETURN'
-];
