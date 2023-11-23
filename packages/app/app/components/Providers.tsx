@@ -7,6 +7,7 @@ import { Keystroke } from "@/lib/keyboard/types";
 import { ModifiersContext } from "../contexts/modifiers";
 import { addKeystrokeHandler, socket } from "../socket";
 import { FadeContext } from "../contexts/fade";
+import { CAPS_LOCK, MODIFIERS } from "@/lib/keyboard/constants";
 
 
 export type ProvidersProps = {
@@ -22,22 +23,50 @@ export default function Providers({
     const [ isCtrlPressed, toggleCtrl ] = useState<boolean>(false);
     const [ isAltPressed, toggleAlt ] = useState<boolean>(false);
     const [ isMetaPressed, toggleMeta ] = useState<boolean>(false);
+    const [ isCapsActive, toggleCaps ] = useState<boolean>(false);
 
-    const [ isFaded, toggleFaded ] = useState<boolean>(true);
+    const isAnyModifierPressed =
+        isShiftPressed || isCtrlPressed ||
+        isAltPressed || isMetaPressed || isCapsActive;
+    const isOnlyShiftPressed =
+        isShiftPressed && !isCtrlPressed &&
+        !isAltPressed && !isMetaPressed;
+
+    const [ isFaded, toggleFade ] = useState<boolean>(true);
     const [ fadeOutTimeout, setFadeOutTimeout ] = useState<NodeJS.Timeout>();
 
+    const handleModifier = (keystroke: Keystroke) => {
+        if (MODIFIERS.slice(0, 2).includes(keystroke.key))
+            toggleShift(keystroke.isPressed);
+        if (MODIFIERS.slice(2, 4).includes(keystroke.key))
+            toggleCtrl(keystroke.isPressed);
+        if (MODIFIERS.slice(4, 6).includes(keystroke.key))
+            toggleAlt(keystroke.isPressed);
+        if (MODIFIERS.slice(6, 8).includes(keystroke.key))
+            toggleMeta(keystroke.isPressed);
+        if (keystroke.key == CAPS_LOCK)
+            toggleCaps(prev => !prev)
+    }
+
     const fadeIn = () => {
-        toggleFaded(false);
+        toggleFade(false);
         setFadeOutTimeout(timeout => {
             clearTimeout(timeout);
-            return setTimeout(() => toggleFaded(true), 2000);
+            return setTimeout(() => toggleFade(true), 2000);
         });
     }
 
     const mountKeystrokeHandler = () => {
         addKeystrokeHandler(keystroke => {
             setKeystroke(keystroke);
-            fadeIn();
+            handleModifier(keystroke);
+
+            if (
+                !MODIFIERS.includes(keystroke.key) &&
+                keystroke.key != CAPS_LOCK &&
+                keystroke.isPressed
+            )
+                fadeIn();
         });
     }
 
@@ -51,9 +80,12 @@ export default function Providers({
                 isShiftPressed, toggleShift,
                 isCtrlPressed, toggleCtrl,
                 isAltPressed, toggleAlt,
-                isMetaPressed, toggleMeta
+                isMetaPressed, toggleMeta,
+                isCapsActive, toggleCaps,
+                isAnyModifierPressed,
+                isOnlyShiftPressed
             }}>
-                <FadeContext.Provider value={{ isFaded }}>
+                <FadeContext.Provider value={{ isFaded, toggleFade }}>
                     { children }
                 </FadeContext.Provider>
             </ModifiersContext.Provider>
