@@ -27,7 +27,7 @@ export default function Providers({
 
     const isAnyModifierPressed =
         isShiftPressed || isCtrlPressed ||
-        isAltPressed || isMetaPressed || isCapsActive;
+        isAltPressed || isMetaPressed;
     const isOnlyShiftPressed =
         isShiftPressed && !isCtrlPressed &&
         !isAltPressed && !isMetaPressed;
