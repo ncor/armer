@@ -3,7 +3,7 @@ import { FadeContext } from "../contexts/fade";
 
 
 export default function useFade() {
-    const { isFaded } = useContext(FadeContext);
+    const fade = useContext(FadeContext);
 
-    return isFaded;
+    return fade;
 }
