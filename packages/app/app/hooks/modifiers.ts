@@ -6,9 +6,6 @@ export default function useModifiers() {
     const modifiers = useContext(ModifiersContext);
 
     const applyModifiers = (key: string) => {
-        if (modifiers.isOnlyShiftPressed)
-            return key;
-
         if (modifiers.isShiftPressed)
             key = '⇧' + key;
         if (modifiers.isCtrlPressed)
