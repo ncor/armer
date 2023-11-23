@@ -10,7 +10,7 @@ export default function CasterModifiers() {
 
     return <AnimatePresence>
         {
-            modifiers.isAnyModifierPressed &&
+            (modifiers.isAnyModifierPressed || modifiers.isCapsActive) &&
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
