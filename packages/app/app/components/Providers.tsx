@@ -1,13 +1,13 @@
 'use client';
 
 import { ReactNode, useEffect, useState } from "react";
-import { SocketContext } from "../contexts/socket";
 import { KeystrokeContext } from "../contexts/keystroke";
 import { Keystroke } from "@/lib/keyboard/types";
 import { ModifiersContext } from "../contexts/modifiers";
-import { addKeystrokeHandler, socket } from "../socket";
+import { addKeystrokeHandler } from "../socket";
 import { FadeContext } from "../contexts/fade";
 import { CAPS_LOCK, MODIFIERS } from "@/lib/keyboard/constants";
+import { getRandomSound } from "../sounds";
 
 
 export type ProvidersProps = {
@@ -56,6 +56,9 @@ export default function Providers({
         });
     }
 
+    const playKeystrokeSound = (key: string) =>
+        getRandomSound().play();
+
     const mountKeystrokeHandler = () => {
         addKeystrokeHandler(keystroke => {
             setKeystroke(keystroke);
@@ -65,8 +68,10 @@ export default function Providers({
                 !MODIFIERS.includes(keystroke.key) &&
                 keystroke.key != CAPS_LOCK &&
                 keystroke.isPressed
-            )
+            ) {
+                playKeystrokeSound(keystroke.key);
                 fadeIn();
+            }
         });
     }
 
@@ -74,21 +79,19 @@ export default function Providers({
         mountKeystrokeHandler();
     }, []);
 
-    return <SocketContext.Provider value={{ socket }}>
-        <KeystrokeContext.Provider value={{ keystroke }}>
-            <ModifiersContext.Provider value={{
-                isShiftPressed, toggleShift,
-                isCtrlPressed, toggleCtrl,
-                isAltPressed, toggleAlt,
-                isMetaPressed, toggleMeta,
-                isCapsActive, toggleCaps,
-                isAnyModifierPressed,
-                isOnlyShiftPressed
-            }}>
-                <FadeContext.Provider value={{ isFaded, toggleFade }}>
-                    { children }
-                </FadeContext.Provider>
-            </ModifiersContext.Provider>
-        </KeystrokeContext.Provider>
-    </SocketContext.Provider>
+    return <KeystrokeContext.Provider value={{ keystroke }}>
+        <ModifiersContext.Provider value={{
+            isShiftPressed, toggleShift,
+            isCtrlPressed, toggleCtrl,
+            isAltPressed, toggleAlt,
+            isMetaPressed, toggleMeta,
+            isCapsActive, toggleCaps,
+            isAnyModifierPressed,
+            isOnlyShiftPressed
+        }}>
+            <FadeContext.Provider value={{ isFaded, toggleFade }}>
+                { children }
+            </FadeContext.Provider>
+        </ModifiersContext.Provider>
+    </KeystrokeContext.Provider>;
 }
