@@ -6,7 +6,6 @@ import {
     F_KEYS,
     KEYMAP,
     MODIFIERS,
-    SHIFT_EXTENSIONS,
     UNPRINTABLE_KEYS,
 } from "@/lib/keyboard/constants";
 import { useEffect, useState } from "react";
